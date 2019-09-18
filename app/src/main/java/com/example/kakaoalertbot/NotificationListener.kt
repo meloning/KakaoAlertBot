@@ -36,17 +36,18 @@ class NotificationListener: NotificationListenerService() {
                 val sender = extras.getString("android.title")?: ""
                 val room = action.title.toString()
 
-                if (room.contains("정보처리 IT 전문연구/산업기능요원 비번:1024")) {
-                    hashMap["정보처리"] = action
+                if (room.contains("roomName")) {
+                    hashMap["roomName"] = action
                 }
-                if (room.contains("메로닝봇")) {
-                    hashMap["메로닝봇"] = action
+                if (room.contains("roomName2")) {
+                    hashMap["roomName2"] = action
                 }
 
                 Log.i("message/content", "$room:$sender:$message")
 
-                if (message.contains("[JunsuAlert]"))
-                    send("[TEST] 병무청 NEW 공지사항이 있어요\n크롤링 -> slack -> 카톡알림", "메로닝봇")
+                if (message.contains("MessageContent"))
+                    send("[BOT] MessageContent", "roomName")
+                    send("[BOT] MessageContent", "roomName2")
             }
         }
         stopSelf()
@@ -57,7 +58,7 @@ class NotificationListener: NotificationListenerService() {
         val sendIntent = Intent()
         val msg = Bundle()
 
-        if (hashMap.isEmpty()) {
+        if (hashMap.isEmpty() || !hashMap.containsKey(roomKey)) {
             Log.i("Listener/send:", "보낼 방의 정보가 아직 없습니다. 보내고자 하는 방의 메시지를 기다려주세요.")
             Toast.makeText(this.applicationContext, "보낼 방의 정보가 아직 없습니다. 보내고자 하는 방의 메시지를 기다려주세요.", Toast.LENGTH_SHORT).show()
             return
